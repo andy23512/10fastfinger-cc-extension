@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@import "cc-extension-core/style.css";
+
+/*
+ * 10FastFingers computes its theme in JS (styled-components) and writes
+ * colors straight into inline styles rather than exposing them as CSS custom
+ * properties, so there is nothing here to map these onto with plain CSS
+ * `var(...)` the way the sibling extensions do. src/apply-theme.ts instead
+ * reads the site's colors off the page with getComputedStyle and sets these
+ * same variables as inline styles on <html>, which take precedence over the
+ * values below. The values below only take effect as the fallback when that
+ * detection fails (see apply-theme.ts) — they are fixed to match the site's
+ * default light theme.
+ */
+:root {
+  --cc-frame-color: #d0d5dd;
+  --cc-key-color: #ffffff;
+  --cc-symbol-color: #101423;
+  --cc-pointer-color: #7f56d9;
+  --cc-font-family: "Roboto Slab", sans-serif;
+}

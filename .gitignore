@@ -1,0 +1,12 @@
+npm-debug.log
+node_modules/
+dist/
+tmp/
+
+.DS_Store
+*.zip
+test-results
+playwright-report
+
+.claude/settings.local.json
+.claude/.headroom_wrap_marker.json

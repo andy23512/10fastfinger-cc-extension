@@ -1,0 +1,59 @@
+{
+  "manifest_version": 3,
+
+  "name": "10FastFingers CC Extension",
+  "short_name": "10FF CC Ext",
+  "description": "An unofficial browser extension for showing layout of CharaChorder input devices on 10FastFingers",
+  "version": "1.0",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "@10fastfingers-cc-extension.andy23512",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },
+
+  "action": {
+    "default_title": "Open Options"
+  },
+
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+
+  "background": {
+    "service_worker": "js/background.js",
+    "scripts": ["js/background.js"]
+  },
+
+  "icons": {
+    "16": "image/icon-16.png",
+    "128": "image/icon-128.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://10fastfingers.com/*"],
+      "js": ["js/vendor.js", "js/content_script.js"],
+      "css": ["font.css"]
+    }
+  ],
+
+  "web_accessible_resources": [
+    {
+      "matches": ["https://10fastfingers.com/*"],
+      "resources": ["*.woff2"]
+    }
+  ],
+
+  "permissions": ["storage"],
+
+  "author": "Tangent Chang (andy23512)",
+  "developer": {
+    "name": "Tangent Chang (andy23512)",
+    "url": "https://github.com/andy23512/10fastfinger-cc-extension"
+  },
+  "homepage_url": "https://github.com/andy23512/10fastfinger-cc-extension"
+}
