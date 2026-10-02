@@ -2032,10 +2032,10 @@ caniuse-lite@^1.0.30001702, caniuse-lite@^1.0.30001746:
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001751.tgz#dacd5d9f4baeea841641640139d2b2a4df4226ad"
   integrity sha512-A0QJhug0Ly64Ii3eIqHu5X51ebln3k4yTUkY1j8drqpWHVreg/VLijN48cZ1bYPiqOQuqpkIKnzr/Ul8V+p6Cw==
 
-cc-extension-core@0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/cc-extension-core/-/cc-extension-core-0.0.5.tgz#c0aaa4795517c6cac16d4aa9b89e56cf97f854e6"
-  integrity sha512-1ObaEuBgc5Kq2cbPEsAGgylrGwTwPEGqrJ6F5akePJUZIy+7GpQ05PrMKh3LX8QQa9/5331oZriHVPYW6MWDKg==
+cc-extension-core@0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/cc-extension-core/-/cc-extension-core-0.0.6.tgz#004604a56822788d12906ff18660022a211e3adc"
+  integrity sha512-HEGraqYxNmx+3SmHJtdqGEp3uY0tgsmB15NiBq5HgSKZMikEx9tj/jtGWmaE5Hr5akOamjHuMQx4fSURBd64Ag==
   dependencies:
     tslib "^2.3.0"
 
