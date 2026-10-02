@@ -42,7 +42,9 @@ function readGradientStopColor(
     return null;
   }
   const backgroundImage = getComputedStyle(element).backgroundImage;
-  const stops = [...backgroundImage.matchAll(/(rgba?\([^)]*\))\s*(\d+(?:\.\d+)?%)?/g)];
+  const stops = [
+    ...backgroundImage.matchAll(/(rgba?\([^)]*\))\s*(\d+(?:\.\d+)?%)?/g),
+  ];
   if (stops.length === 0) {
     return null;
   }
