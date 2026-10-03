@@ -54,16 +54,9 @@ test.describe("live 10fastfingers.com", () => {
     // comment in harness.mjs for why. If this starts failing, 10FastFingers
     // renamed or removed markup src/apply-theme.ts depends on, and its theme
     // detection has likely fallen back to src/style.css's fixed colors.
-    //
-    // THEME_SELECTORS.pointer (the "Test" button) is deliberately not
-    // asserted here: 10FastFingers omits it specifically when the page is
-    // driven through Playwright's own test runner — confirmed reproducible
-    // in this environment, and confirmed absent when the exact same
-    // navigation is driven from a plain `node` script or a real interactive
-    // browser instead — so this suite can never observe it either way.
-    // apply-theme.spec.ts and manual testing are what actually cover it.
     const exists = await themeSelectorsExist(page);
     expect(exists.symbol, THEME_SELECTORS.symbol).toBe(true);
+    expect(exists.pointer, THEME_SELECTORS.pointer).toBe(true);
     expect(exists.surface, THEME_SELECTORS.surface).toBe(true);
   });
 });

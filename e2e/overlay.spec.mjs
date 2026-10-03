@@ -4,10 +4,10 @@
  * Runs against a recorded snapshot of 10fastfingers.com, so it is
  * deterministic and needs no network. It covers the parts nothing else does:
  * that the content script injects, that React renders the layout, that
- * src/apply-theme.ts falls back to src/style.css's fixed colors here (see
- * the theme test below for why that fallback, not live detection, is the
- * deterministic thing to assert against a snapshot), and that a key is
- * highlighted for the text on screen.
+ * src/apply-theme.ts live-detects the theme even from a snapshot (see the
+ * theme test below for why a snapshot can deterministically reproduce that,
+ * not just the fixed-fallback branch), and that a key is highlighted for the
+ * text on screen.
  *
  * When the site redesigns, this suite keeps passing against the old snapshot.
  * That is what the canary suite is for.
@@ -51,36 +51,32 @@ test.describe("overlay on a recorded 10fastfingers page", () => {
     expect(state.labelCount).toBeGreaterThan(50);
   });
 
-  test("falls back to the fixed theme colors from src/style.css", async () => {
-    // 10FastFingers styles the "Test" button src/apply-theme.ts reads
-    // pointer-color from through styled-components' "speedy" mode, which
-    // inserts rules straight into the live CSSOM via `sheet.insertRule()`
-    // rather than through a `<style>` tag's text content. `page.content()`
-    // (used to record the snapshot) only serializes DOM text, so that rule
-    // never makes it into the snapshot and the button's background resolves
-    // as transparent here — on a real, live navigation (see
-    // e2e/canary.spec.mjs) it resolves normally. `<body>`'s own background
-    // (surface) is set via an inline style attribute rather than a
-    // styled-components class, so it survives the snapshot fine; `symbol`
-    // reads a text `color`, which — unlike backgroundColor — has an
-    // inherited non-transparent default (plain black) even with no rule of
-    // its own applied, so it resolves to *something*, just not
-    // 10FastFingers's real text color. Either way, `pointer` alone missing
-    // is enough to make the fixed fallback the only outcome a snapshot can
-    // deterministically produce; live detection itself is covered by the
-    // canary suite instead.
+  test("live-detects the theme even from a snapshot, surface included", async () => {
+    // Both symbol and pointer are styled through styled-components classes
+    // inserted straight into the live CSSOM via `sheet.insertRule()`
+    // ("speedy" mode) rather than a `<style>` tag's text content, so
+    // `page.content()` (used to record the snapshot) never captures either
+    // rule; both fall back to the browser's inherited default for text color
+    // (plain black) instead — a coincidental non-transparent value, not
+    // 10FastFingers's real one. `<body>`'s background (surface) is set via a
+    // plain inline style attribute, which IS DOM text, so it survives replay
+    // faithfully. Since none of the three sources resolves to null here,
+    // applyTheme() still takes the live-detection branch rather than
+    // src/style.css's fixed fallback; see src/apply-theme.spec.ts for that
+    // fallback branch itself, which needs sources to be missing or
+    // transparent, not just semantically wrong, to trigger.
     const detected = await readDetectedThemeColors(page);
     expect(detected).toEqual({
       symbol: "rgb(0, 0, 0)",
-      pointer: null,
+      pointer: "rgb(0, 0, 0)",
       surface: "rgb(241, 252, 255)",
     });
 
     expect(state.semanticVars).toEqual({
-      frame: "#d0d5dd",
-      key: "#ffffff",
-      symbol: "#101423",
-      pointer: "#7f56d9",
+      frame: "rgb(241, 252, 255)",
+      key: "rgb(241, 252, 255)",
+      symbol: "rgb(0, 0, 0)",
+      pointer: "rgb(0, 0, 0)",
     });
   });
 

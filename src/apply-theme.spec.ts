@@ -10,7 +10,7 @@ function cssVar(name: string) {
 }
 
 const CONTENT = `
-  <a data-testid="LinkButton-root" modifier="primary" style="background-color: rgb(127, 86, 217);"></a>
+  <div data-testid="SeoTextBlock-root"><a data-testid="Link-root" style="color: rgb(127, 86, 217);"></a></div>
   <div data-testid="word-box-words" style="color: rgb(16, 20, 35);"></div>
 `;
 
@@ -32,7 +32,7 @@ describe("applyTheme", () => {
 
   it("falls back to the CSS defaults when the word box is missing", () => {
     render(
-      '<a data-testid="LinkButton-root" modifier="primary" style="background-color: rgb(127, 86, 217);"></a>'
+      '<div data-testid="SeoTextBlock-root"><a data-testid="Link-root" style="color: rgb(127, 86, 217);"></a></div>'
     );
     applyTheme();
     expect(cssVar("--cc-frame-color")).toBe("");
@@ -41,7 +41,7 @@ describe("applyTheme", () => {
     expect(cssVar("--cc-pointer-color")).toBe("");
   });
 
-  it("falls back to the CSS defaults when the primary button is missing", () => {
+  it("falls back to the CSS defaults when the pointer link is missing", () => {
     render(
       '<div data-testid="word-box-words" style="color: rgb(16, 20, 35);"></div>'
     );

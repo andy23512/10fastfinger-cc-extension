@@ -25,7 +25,7 @@ export const WORD_BOX_SELECTOR = '[data-testid="word-box-words"]';
 // Kept in sync with that file by hand.
 export const THEME_SELECTORS = {
   symbol: '[data-testid="word-box-words"]',
-  pointer: '[data-testid="LinkButton-root"][modifier="primary"]',
+  pointer: '[data-testid="SeoTextBlock-root"] [data-testid="Link-root"]',
   surface: "body",
 };
 
@@ -186,8 +186,12 @@ export async function openOverlay(context) {
 /**
  * Reads the overlay's state from the page.
  *
- * A highlighted key is the single shape the layout renders at 0.5 opacity;
- * every other highlight shape sits at 0 (hidden) or 1 (plain key).
+ * A highlighted key is the single shape styled `fill-(--cc-pointer-color)`
+ * that the layout doesn't render at 0 opacity; every other such shape (one
+ * per key the layout can highlight) sits hidden at 0. Matched by class
+ * rather than a specific opacity value because the site config's
+ * `highlightOpacity` (left at its 0.5 default here) makes that value
+ * configurable.
  *
  * `semanticVars` is whatever ended up on `--cc-*` on `<html>`: either
  * src/apply-theme.ts's live detection (if it found every color it needs) or
@@ -199,7 +203,7 @@ export function readOverlayState(page) {
     const root = document.querySelector(overlayRoot);
     const style = getComputedStyle(document.documentElement);
     const layoutSvg = root.querySelector("svg");
-    const highlighted = [...root.querySelectorAll('[opacity="0.5"]')];
+    const highlighted = [...root.querySelectorAll('[class*="fill-(--cc-pointer-color)"]:not([opacity="0"])')];
     return {
       svgCount: root.querySelectorAll("svg").length,
       labelCount: root.querySelectorAll("text").length,
@@ -253,16 +257,9 @@ export function readNextTextFromPage(page) {
  * Whether each of THEME_SELECTORS still matches an element on the page.
  *
  * Deliberately checks presence only, not resolved color (see
- * readDetectedThemeColors for that). 10FastFingers's live site, when driven
- * through Playwright's own test runner specifically, renders the "Test"
- * button (THEME_SELECTORS.pointer) without its background color applied —
- * consistently reproducible, and not present at all when driving the same
- * code from a plain `node` script instead, or when clicking around manually
- * in a real browser. Its data-testid/modifier attributes are still there
- * either way. Since what this function exists to catch is 10FastFingers
- * renaming or removing that markup — not whatever is degrading the color in
- * that one environment — presence is the more reliable signal to assert on
- * in e2e/canary.spec.mjs.
+ * readDetectedThemeColors for that) — this is what e2e/canary.spec.mjs
+ * asserts on, since what it exists to catch is 10FastFingers renaming or
+ * removing the markup src/apply-theme.ts depends on.
  */
 export function themeSelectorsExist(page) {
   return page.evaluate(
@@ -298,7 +295,7 @@ export function readDetectedThemeColors(page) {
     }
     return {
       symbol: readColor(selectors.symbol, "color"),
-      pointer: readColor(selectors.pointer, "backgroundColor"),
+      pointer: readColor(selectors.pointer, "color"),
       surface: readColor(selectors.surface, "backgroundColor"),
     };
   }, THEME_SELECTORS);
@@ -308,7 +305,7 @@ export function readDetectedThemeColors(page) {
 export function readHighlightCount(page) {
   return page.evaluate(
     (overlayRoot) =>
-      document.querySelectorAll(`${overlayRoot} [opacity="0.5"]`).length,
+      document.querySelectorAll(`${overlayRoot} [class*="fill-(--cc-pointer-color)"]:not([opacity="0"])`).length,
     OVERLAY_ROOT,
   );
 }
@@ -324,7 +321,7 @@ export function readHighlightCount(page) {
 export function readHighlightedKeyLabels(page) {
   return page.evaluate((overlayRoot) => {
     const root = document.querySelector(overlayRoot);
-    return [...root.querySelectorAll('[opacity="0.5"]')].map((shape) => {
+    return [...root.querySelectorAll('[class*="fill-(--cc-pointer-color)"]:not([opacity="0"])')].map((shape) => {
       const group = shape.closest("g");
       return group
         ? [...group.querySelectorAll("text")].map((t) => t.textContent)

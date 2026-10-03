@@ -1,5 +1,6 @@
 const SYMBOL_SELECTOR = '[data-testid="word-box-words"]';
-const POINTER_SELECTOR = '[data-testid="LinkButton-root"][modifier="primary"]';
+const POINTER_SELECTOR =
+  '[data-testid="SeoTextBlock-root"] [data-testid="Link-root"]';
 const SURFACE_SELECTOR = "body";
 const FRAME_GRADIENT_SELECTOR = '[data-testid="main-root"]';
 
@@ -57,9 +58,21 @@ function readGradientStopColor(
  * 10FastFingers exposes no CSS custom properties for its theme (see
  * src/style.css), so its colors are read straight off the computed style of
  * a few representative elements instead: the typing text for symbol-color,
- * the primary CTA button for pointer-color, and `<body>` for both
- * frame-color and key-color (the site has no second neutral tone to tell
- * those two apart).
+ * the "other languages" footer section's link text color for pointer-color,
+ * and `<body>` for both frame-color and key-color (the site has no second
+ * neutral tone to tell those two apart).
+ *
+ * pointer-color used to read the header's primary "Test" button, then the
+ * header logo mark's `<line>` stroke, but both ended up too close to
+ * frame/key-color in some themes (the logo mark, in particular, uses a dark
+ * tone in Default Dark that barely stands out against a dark frame/key).
+ * `[data-testid="SeoTextBlock-root"] [data-testid="Link-root"]` — a language
+ * switcher link in the footer's "Typing tests in other languages" section —
+ * resolves to a noticeably lighter color in the dark themes, which contrasts
+ * better. The tradeoff: it only takes 4 distinct values across the site's 6
+ * themes (Default Light/Classic share one, Default Dark/Glow share another),
+ * where the logo mark took 6 distinct values — contrast was prioritized over
+ * per-theme distinctiveness here.
  *
  * `<body>`, not `[data-testid="Header-root"]`, on purpose: across
  * 10FastFingers's themes the header stays a fixed dark navy in every theme
@@ -76,7 +89,7 @@ function readGradientStopColor(
  */
 export function applyTheme(): void {
   const symbol = readColor(SYMBOL_SELECTOR, "color");
-  const pointer = readColor(POINTER_SELECTOR, "backgroundColor");
+  const pointer = readColor(POINTER_SELECTOR, "color");
   const surface = readColor(SURFACE_SELECTOR, "backgroundColor");
 
   const rootStyle = document.documentElement.style;
@@ -88,7 +101,7 @@ export function applyTheme(): void {
   }
 
   const frameColor =
-    readGradientStopColor(FRAME_GRADIENT_SELECTOR, "0%") ?? surface;
+    readGradientStopColor(FRAME_GRADIENT_SELECTOR, "100%") ?? surface;
 
   rootStyle.setProperty("--cc-frame-color", frameColor);
   rootStyle.setProperty("--cc-key-color", frameColor);
@@ -112,7 +125,7 @@ const THEME_SOURCE_MARKERS: ThemeSourceMarker[] = [
   },
   {
     selector: POINTER_SELECTOR,
-    property: "backgroundColor",
+    property: "color",
     label: "--cc-pointer-color",
     markerColor: "#2196f3",
   },

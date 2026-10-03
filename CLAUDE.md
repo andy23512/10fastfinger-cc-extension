@@ -79,8 +79,9 @@ unpacked); in Firefox load any file under `dist/` as a temporary add-on
   CSS custom properties for it, unlike Monkeytype/Keybr, so `src/style.css`
   can't map `--cc-*` onto a site variable the way those two do. Instead,
   `src/apply-theme.ts` reads colors straight off a few representative
-  elements with `getComputedStyle` (the typing text for symbol-color, the
-  header's "Test" button for pointer-color, `<body>` for both frame-color and
+  elements with `getComputedStyle` (the typing text for symbol-color, a
+  language-switcher link's text color in the footer's "Typing tests in other
+  languages" section for pointer-color, `<body>` for both frame-color and
   key-color — the site has no second neutral tone to tell those two apart)
   and writes them as inline `--cc-*` styles on `<html>`, which take
   precedence over `src/style.css`'s fixed values. If even one of those
@@ -94,27 +95,33 @@ unpacked); in Firefox load any file under `dist/` as a temporary add-on
   stays a fixed dark near-black in every theme, so reading frame/key from the
   header paired dark-on-dark and made the overlay nearly unreadable in those
   themes; `<body>`'s background stays light across all of them instead.
-- Two things make this detection hard to verify with the same DOM tricks the
-  rest of this repo relies on, both encountered while building it:
-  - `e2e/overlay.spec.mjs`'s recorded snapshot can never show live-detected
-    colors, only the fixed fallback. 10FastFingers styles these elements
-    through styled-components' "speedy" mode, which inserts CSS rules
-    straight into the live CSSOM via `sheet.insertRule()` rather than into a
-    `<style>` tag's text content; `page.content()` (what records the
-    snapshot) only serializes DOM text, so those rules are silently absent
-    from every recording, and the colors they'd produce compute as
-    transparent when replayed. This never happens on an actual live
-    navigation, which is what real users always get.
-  - 10FastFingers omits the header's "Test" button specifically when the
-    page is driven through Playwright's own test runner (`npx playwright
-    test`) — confirmed reproducible — while rendering it normally when the
-    exact same navigation runs from a plain `node` script, or in a real
-    interactive browser. `navigator.webdriver` is `true` either way, so
-    that's not the signal it's keying off; whatever this is, it appears
-    specific to Playwright's test runner. Because of this,
-    `e2e/canary.spec.mjs` cannot assert on that button at all (see its
-    comment); that one selector's correctness rests on manual testing and
-    `src/apply-theme.spec.ts`'s DOM-fixture tests instead.
+  pointer-color has gone through two prior sources: the header's primary
+  "Test" button (dropped along with the `modifier` attribute pattern it
+  relied on in a 10FastFingers redesign, which silently broke live theme
+  detection for every user until caught), then the header logo mark's
+  `<line>` stroke (present and theme-reactive on every page, but too close in
+  tone to frame/key-color in some themes — e.g. both resolve dark in Default
+  Dark). The footer link text resolves to a visibly lighter color in the dark
+  themes, which contrasts better against frame/key-color, at the cost of only
+  taking 4 distinct values across the site's 6 themes instead of 6 (Default
+  Light/Classic share one value, Default Dark/Glow share another) — if this
+  selector ever goes dark or contrast regresses again, `yarn e2e:canary`'s
+  theme-detection test is what catches the former.
+- `e2e/overlay.spec.mjs`'s recorded snapshot treats symbol and pointer the
+  same way, and surface differently. 10FastFingers styles both symbol (the
+  typing text) and pointer (the footer link) through styled-components'
+  "speedy" mode, which inserts CSS rules straight into the live CSSOM via
+  `sheet.insertRule()` rather than into a `<style>` tag's text content;
+  `page.content()` (what records the snapshot) only serializes DOM text, so
+  both rules are silently absent from every recording and both fall back to
+  the browser's inherited default for text color (plain black) — a
+  coincidental non-transparent value, not 10FastFingers's real one. surface
+  has no such problem: `<body>`'s background is a plain inline style
+  attribute, which `page.content()` serializes faithfully, so it survives
+  replay with its real value intact. All three still count as "resolved"
+  either way, so the hermetic suite ends up exercising the live-detection
+  branch, not the fixed-fallback one — see that test's comment for the full
+  breakdown.
 - The extension's injected root id is `10fastfingers-cc-extension-root`,
   which starts with a digit and is therefore **not a valid CSS id selector**
   (`#10fastfingers-...` throws `SyntaxError` from `querySelector`). Anywhere
