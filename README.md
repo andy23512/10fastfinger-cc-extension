@@ -2,6 +2,12 @@
 
 [![CI](https://img.shields.io/github/actions/workflow/status/andy23512/10fastfinger-cc-extension/ci.yml?branch=main&label=CI)](https://github.com/andy23512/10fastfinger-cc-extension/actions/workflows/ci.yml)
 
+## Publication Status
+
+| Published Version                                                                                                                                                                             |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [<img src="https://img.shields.io/chrome-web-store/v/ijoddmekpnccpinjpfhgedbdplgdggli">](https://chromewebstore.google.com/detail/10fastfingers-cc-extensio/ijoddmekpnccpinjpfhgedbdplgdggli) |
+
 ## Summary
 
 An unofficial browser extension that displays the layout of CharaChorder input devices on [10FastFingers](https://10fastfingers.com/)
