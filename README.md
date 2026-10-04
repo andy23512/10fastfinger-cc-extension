@@ -1,6 +1,6 @@
 # 10FastFingers CC Extension
 
-[![CI](https://img.shields.io/github/actions/workflow/status/andy23512/10fastfinger-cc-extension/ci.yml?branch=main&label=CI)](https://github.com/andy23512/10fastfinger-cc-extension/actions/workflows/ci.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/andy23512/10fastfingers-cc-extension/ci.yml?branch=main&label=CI)](https://github.com/andy23512/10fastfingers-cc-extension/actions/workflows/ci.yml)
 
 ## Publication Status
 

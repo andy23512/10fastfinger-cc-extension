@@ -1,5 +1,5 @@
 {
-  "name": "10fastfinger-cc-extension",
+  "name": "10fastfingers-cc-extension",
   "version": "1.0.0",
   "description": "An unofficial browser extension that displays the layout of CharaChorder input devices on 10FastFingers.",
   "main": "index.js",
@@ -12,9 +12,9 @@
     "clean": "rimraf dist",
     "test": "npx jest --passWithNoTests",
     "style": "prettier --write \"src/**/*.{ts,tsx}\"",
-    "pack-firefox": "cd dist && zip -r -FS ../10fastfinger-cc-extension-firefox.zip *",
-    "pack-chrome": "zip -r -FS 10fastfinger-cc-extension-chrome.zip dist",
-    "pack-source-code": "zip -r -FS 10fastfinger-cc-extension-source.zip package.json postcss.config.cjs public README.md src tailwind.config.cjs tsconfig.json webpack yarn.lock",
+    "pack-firefox": "cd dist && zip -r -FS ../10fastfingers-cc-extension-firefox.zip *",
+    "pack-chrome": "zip -r -FS 10fastfingers-cc-extension-chrome.zip dist",
+    "pack-source-code": "zip -r -FS 10fastfingers-cc-extension-source.zip package.json postcss.config.cjs public README.md src tailwind.config.cjs tsconfig.json webpack yarn.lock",
     "e2e": "playwright test e2e/overlay.spec.mjs e2e/overlay-states.spec.mjs e2e/sync.spec.mjs e2e/upgrade.spec.mjs",
     "e2e:canary": "playwright test e2e/canary.spec.mjs",
     "e2e:record": "node e2e/record-snapshot.mjs"
@@ -23,7 +23,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andy23512/10fastfinger-cc-extension.git"
+    "url": "git+https://github.com/andy23512/10fastfingers-cc-extension.git"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
