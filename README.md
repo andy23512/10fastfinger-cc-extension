@@ -7,6 +7,7 @@
 | Published Version                                                                                                                                                                             |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [<img src="https://img.shields.io/chrome-web-store/v/ijoddmekpnccpinjpfhgedbdplgdggli">](https://chromewebstore.google.com/detail/10fastfingers-cc-extensio/ijoddmekpnccpinjpfhgedbdplgdggli) |
+| [<img src="https://img.shields.io/amo/v/10fastfingers-cc-extension">](https://addons.mozilla.org/en-US/firefox/addon/10fastfingers-cc-extension/)                                             |
 
 ## Summary
 
